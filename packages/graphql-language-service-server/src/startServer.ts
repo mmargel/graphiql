@@ -9,6 +9,7 @@
 
 import * as net from 'net';
 import { MessageProcessor } from './MessageProcessor';
+import { GraphQLConfig } from 'graphql-config';
 
 import {
   createMessageConnection,
@@ -41,6 +42,7 @@ import {
 } from 'vscode-languageserver';
 
 import { Logger } from './Logger';
+import { parseDocument } from './parseDocument';
 
 type Options = {
   // port for the LSP server to run on
@@ -49,7 +51,14 @@ type Options = {
   method?: 'socket' | 'stream' | 'node';
   // the directory where graphql-config is found
   configDir?: string;
+  // array of functions to transform the graphql-config and add extensions dynamically
+  extensions?: Array<(config: GraphQLConfig) => GraphQLConfig>;
+  fileExtensions?: string[];
+  // pre-existing GraphQLConfig
+  config?: GraphQLConfig;
+  parser?: typeof parseDocument;
 };
+('graphql-language-service-types');
 
 /**
  * startServer - initialize LSP server with options
@@ -86,7 +95,13 @@ export default async function startServer(options: Options): Promise<void> {
               process.exit(0);
             });
             const connection = createMessageConnection(reader, writer, logger);
-            addHandlers(connection, logger, options.configDir);
+            addHandlers(
+              connection,
+              logger,
+              options.configDir,
+              options?.extensions ?? [],
+              options.config,
+            );
             connection.listen();
           })
           .listen(port);
@@ -102,7 +117,15 @@ export default async function startServer(options: Options): Promise<void> {
         break;
     }
     const connection = createMessageConnection(reader, writer, logger);
-    addHandlers(connection, logger, options.configDir);
+    addHandlers(
+      connection,
+      logger,
+      options.configDir,
+      options?.extensions ?? [],
+      options.config,
+      options.parser,
+      options.fileExtensions,
+    );
     connection.listen();
   }
 }
@@ -111,8 +134,18 @@ function addHandlers(
   connection: MessageConnection,
   logger: Logger,
   configDir?: string,
+  extensions?: Array<(config: GraphQLConfig) => GraphQLConfig>,
+  config?: GraphQLConfig,
+  parser?: typeof parseDocument,
+  fileExtensions?: string[],
 ): void {
-  const messageProcessor = new MessageProcessor(logger);
+  const messageProcessor = new MessageProcessor(
+    logger,
+    extensions,
+    config,
+    parser,
+    fileExtensions,
+  );
   connection.onNotification(
     DidOpenTextDocumentNotification.type,
     async params => {
