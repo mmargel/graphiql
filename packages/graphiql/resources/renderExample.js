@@ -72,7 +72,7 @@ function updateURL() {
 // Defines a GraphQL fetcher using the fetch API. You're not required to
 // use fetch, and could instead implement graphQLFetcher however you like,
 // as long as it returns a Promise or Observable.
-function graphQLFetcher(graphQLParams) {
+function graphQLFetcher(graphQLParams, headers = {}) {
   // When working locally, the example expects a GraphQL server at the path /graphql.
   // In a PR preview, it connects to the Star Wars API externally.
   // Change this to point wherever you host your GraphQL server.
@@ -85,6 +85,7 @@ function graphQLFetcher(graphQLParams) {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      ...headers,
     },
     body: JSON.stringify(graphQLParams),
     credentials: 'omit',
