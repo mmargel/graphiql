@@ -26,11 +26,12 @@ type VariableEditorProps = {
   value?: string;
   onEdit: (value: string) => void;
   readOnly?: boolean;
-  onHintInformationRender: (value: HTMLDivElement) => void;
+  onHintInformationRender?: (value: HTMLDivElement) => void;
   onPrettifyQuery: (value?: string) => void;
   onMergeQuery: (value?: string) => void;
   onRunQuery: (value?: string) => void;
   editorTheme?: string;
+  mode: string | object,
 };
 
 /**
@@ -84,7 +85,7 @@ export class VariableEditor extends React.Component<VariableEditorProps> {
       value: this.props.value || '',
       lineNumbers: true,
       tabSize: 2,
-      mode: 'graphql-variables',
+      mode: this.props.mode,
       theme: this.props.editorTheme || 'graphiql',
       keyMap: 'sublime',
       autoCloseBrackets: true,
@@ -249,6 +250,8 @@ export class VariableEditor extends React.Component<VariableEditorProps> {
     instance: CM.Editor,
     changeObj?: CM.EditorChangeLinkedList,
   ) => {
-    onHasCompletion(instance, changeObj, this.props.onHintInformationRender);
+    if (this.props.onHintInformationRender) {
+      onHasCompletion(instance, changeObj, this.props.onHintInformationRender);
+    }
   };
 }

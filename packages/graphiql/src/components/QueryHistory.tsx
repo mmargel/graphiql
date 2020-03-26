@@ -21,6 +21,7 @@ const MAX_HISTORY_LENGTH = 20;
 const shouldSaveQuery = (
   query?: string,
   variables?: string,
+  headers?: string,
   lastQuerySaved?: QueryStoreItem,
 ) => {
   if (!query) {
@@ -42,11 +43,15 @@ const shouldSaveQuery = (
   }
   if (JSON.stringify(query) === JSON.stringify(lastQuerySaved.query)) {
     if (
-      JSON.stringify(variables) === JSON.stringify(lastQuerySaved.variables)
+      JSON.stringify(variables) === JSON.stringify(lastQuerySaved.variables) &&
+      JSON.stringify(headers) === JSON.stringify(lastQuerySaved.headers)
     ) {
       return false;
     }
     if (variables && !lastQuerySaved.variables) {
+      return false;
+    }
+    if (headers && !lastQuerySaved.headers) {
       return false;
     }
   }
@@ -56,6 +61,7 @@ const shouldSaveQuery = (
 type QueryHistoryProps = {
   query?: string;
   variables?: string;
+  headers?: string;
   operationName?: string;
   queryID?: number;
   onSelectQuery: HandleSelectQueryFn;
@@ -116,12 +122,21 @@ export class QueryHistory extends React.Component<
   updateHistory = (
     query?: string,
     variables?: string,
+    headers?: string,
     operationName?: string,
   ) => {
-    if (shouldSaveQuery(query, variables, this.historyStore.fetchRecent())) {
+    if (
+      shouldSaveQuery(
+        query,
+        variables,
+        headers,
+        this.historyStore.fetchRecent(),
+      )
+    ) {
       this.historyStore.push({
         query,
         variables,
+        headers,
         operationName,
       });
       const historyQueries = this.historyStore.items;
@@ -137,6 +152,7 @@ export class QueryHistory extends React.Component<
   toggleFavorite: HandleToggleFavoriteFn = (
     query,
     variables,
+    headers,
     operationName,
     label,
     favorite,
@@ -144,6 +160,7 @@ export class QueryHistory extends React.Component<
     const item: QueryStoreItem = {
       query,
       variables,
+      headers,
       operationName,
       label,
     };
@@ -163,6 +180,7 @@ export class QueryHistory extends React.Component<
   editLabel: HandleEditLabelFn = (
     query,
     variables,
+    headers,
     operationName,
     label,
     favorite,
@@ -170,6 +188,7 @@ export class QueryHistory extends React.Component<
     const item = {
       query,
       variables,
+      headers,
       operationName,
       label,
     };
