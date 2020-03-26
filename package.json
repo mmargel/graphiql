@@ -33,6 +33,7 @@
     "build-bundles": "yarn prebuild-bundles && yarn workspace graphiql run build-bundles",
     "prebuild-bundles": "yarn build-ts-esm && yarn build-bundles-clean",
     "build-bundles-clean": "rimraf '{packages,examples}/**/{bundle,cdn,webpack}' && lerna run build-bundles-clean",
+    "dev": "yarn workspace graphiql dev",
     "tsc": "tsc --build",
     "test": "jest",
     "test-mocha": "yarn workspace codemirror-graphql run test",
