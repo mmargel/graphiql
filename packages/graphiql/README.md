@@ -14,6 +14,13 @@ _/ˈɡrafək(ə)l/_ A graphical interactive in-browser GraphQL IDE. [Try the liv
 
 [![](https://raw.githubusercontent.com/graphql/graphiql/master/packages/graphiql/resources/graphiql.jpg)](http://graphql.org/swapi-graphql)
 
+## Preface
+
+Below is the original readme for this project.
+
+The main differences between this fork and the base repo are:
+- This version supports custom request headers
+
 ## Features
 
 - Syntax highlighting.
