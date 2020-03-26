@@ -73,6 +73,7 @@ export class VariableEditor extends React.Component<VariableEditorProps> {
     require('codemirror/addon/fold/brace-fold');
     require('codemirror/addon/fold/foldgutter');
     require('codemirror/addon/lint/lint');
+    require('codemirror/addon/lint/json-lint');
     require('codemirror/addon/search/searchcursor');
     require('codemirror/addon/search/jump-to-line');
     require('codemirror/addon/dialog/dialog');
