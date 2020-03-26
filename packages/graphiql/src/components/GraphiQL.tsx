@@ -40,7 +40,7 @@ import getSelectedOperationName from '../utility/getSelectedOperationName';
 import debounce from '../utility/debounce';
 import find from '../utility/find';
 import { GetDefaultFieldNamesFn, fillLeafs } from '../utility/fillLeafs';
-import { getLeft, getTop } from '../utility/elementPosition';
+import { getLeft } from '../utility/elementPosition';
 import mergeAST from '../utility/mergeAst';
 import {
   introspectionQuery,
@@ -597,7 +597,7 @@ export class GraphiQL extends React.Component<GraphiQLProps, GraphiQLState> {
                   onRunQuery={this.handleEditorRunQuery}
                   editorTheme={this.props.editorTheme}
                   readOnly={this.props.readOnly}
-                  mode={{ name: 'javascript', json: true }}
+                  mode='json'
                 />
               </section>
             </div>

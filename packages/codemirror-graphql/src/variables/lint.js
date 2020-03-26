@@ -18,6 +18,29 @@ import {
 
 import jsonParse from '../utils/jsonParse';
 
+CodeMirror.registerHelper(
+  'lint',
+  'json',
+  (text, options, editor) => {
+    // If there's no text, do nothing.
+    if (!text) {
+      return [];
+    }
+
+    // Then, linter needs to determine if there are any parsing errors.
+    try {
+      jsonParse(text);
+    } catch (syntaxError) {
+      if (syntaxError.stack) {
+        throw syntaxError;
+      }
+      return [lintError(editor, syntaxError, syntaxError.message)];
+    }
+
+    return  [];
+  },
+);
+
 /**
  * Registers a "lint" helper for CodeMirror.
  *

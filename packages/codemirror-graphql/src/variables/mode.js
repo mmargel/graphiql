@@ -11,11 +11,7 @@ import CodeMirror from 'codemirror';
 
 import { list, t, onlineParser, opt, p } from 'graphql-language-service-parser';
 
-/**
- * This mode defines JSON, but provides a data-laden parser state to enable
- * better code intelligence.
- */
-CodeMirror.defineMode('graphql-variables', config => {
+const modeCallback = (config) => {
   const parser = onlineParser({
     eatWhitespace: stream => stream.eatSpace(),
     lexRules: LexRules,
@@ -35,7 +31,14 @@ CodeMirror.defineMode('graphql-variables', config => {
       explode: '[]{}',
     },
   };
-});
+};
+
+/**
+ * This mode defines JSON, but provides a data-laden parser state to enable
+ * better code intelligence.
+ */
+CodeMirror.defineMode('graphql-variables', modeCallback);
+CodeMirror.defineMode('json', modeCallback);
 
 function indent(state, textAfter) {
   const levels = state.levels;
